@@ -61,7 +61,6 @@ public class CharacterInformation : MonoBehaviour
             hpBar.fillAmount = (float)currentHp / maxHp; // HP 바를 현재 HP 값으로 업데이트
         }
     }
-
     private void Die()
     {
         Destroy(gameObject);
