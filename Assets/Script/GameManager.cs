@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-
-    private int gameStage = 1;
+    public int gameStage = 1;
 
     public void AddStage()
     {
@@ -16,6 +15,13 @@ public class GameManager : Singleton<GameManager>
     {
         //라운드가 0 이하가 되는 것을 방지
         gameStage = Mathf.Max(1, gameStage -1);
+
+    }
+
+    public void ChangeScene(string sceneName)
+    {
+        if (sceneName is not null) SceneManager.LoadScene(sceneName);
+
     }
 
 

@@ -1,75 +1,116 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class CharacterMove : MonoBehaviour
 {
-
     public float speed = 5f;
     public float deceleration = 10f;
 
-    private Rigidbody2D _rigidbody;
-    public Animator animator;
+    public float raycastDistance = 5f;
+    public LayerMask enemyLayer;
 
+    private Rigidbody2D _rigidbody;
     private bool facingRight = true;
 
-    void Awake()
+    public Animator animator;
+
+    private bool isFighting = false;
+
+    private bool canAttack = true;
+    public float attackCoolDown = 1.0f;
+
+    private CharacterInformation _characterInformation;
+
+    private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _characterInformation = GetComponent<CharacterInformation>();
     }
 
-
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        // 사용자 입력 후 움직임 처리
-        float moveX = Input.GetAxis("Horizontal");
-        
-        Vector2 movement = new Vector2(moveX, 0);
-            
-        if (movement == Vector2.zero) // 감속 적용
+        StartCoroutine(EnemyDetectionRoutine());
+    }
+    private IEnumerator EnemyDetectionRoutine()
+    {
+        while (true)
+        {
+            DetectEnemies();
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
+    private void Update()
+    {
+        MoveAutomatically();
+
+    }
+
+    private void MoveAutomatically()
+    {
+        Vector2 movement = new Vector2(speed, 0);
+
+        if (isFighting)
         {
             _rigidbody.velocity = Vector2.Lerp(_rigidbody.velocity, Vector2.zero, deceleration * Time.deltaTime);
         }
         else
         {
-            // 속도 설정
-            _rigidbody.velocity = movement * speed;
+            _rigidbody.velocity = movement;
         }
 
-        //애니메이터 변수 작동
-        if(moveX != 0)
+        animator.SetFloat("RunState", _rigidbody.velocity.magnitude > 0 ? 0.5f : 0);
+        Flip(_rigidbody.velocity.x);
+    }   
+
+    private void DetectEnemies()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, facingRight ? Vector2.right : Vector2.left, raycastDistance, enemyLayer);
+
+        if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            animator.SetFloat("RunState", 0.5f);
+            isFighting = true;
+            _rigidbody.velocity = Vector2.zero;
+
+            Attack(hit.collider.gameObject);
         }
         else
         {
-            animator.SetFloat("RunState", 0);
+            isFighting = false;
         }
-
-        //임시로 넣은 공격 기능
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            animator.SetTrigger("Attack");
-        }
-
-        //캐릭터 스프라이트 뒤집기
-        Flip(moveX);
-
     }
 
-    void Flip(float moveX)
+    private void Attack(GameObject enemy)
     {
-        if (moveX > 0 && !facingRight || moveX < 0 && facingRight)
+        if (canAttack)
+        {
+            animator.SetTrigger("Attack");
+
+            CharacterInformation enemyHealth = enemy.GetComponent<CharacterInformation>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(_characterInformation.currentAtk);
+            }
+
+            StartCoroutine(StartAttackCooldown());
+        }
+    }
+
+    private IEnumerator StartAttackCooldown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(attackCoolDown);
+        canAttack = true;
+    }
+
+    private void Flip(float velocityX)
+    {
+        if (velocityX > 0 && !facingRight || velocityX < 0 && facingRight)
         {
             facingRight = !facingRight;
-
-            // 캐릭터의 스케일을 반전시켜서 뒤집기
             Vector3 scale = transform.localScale;
             scale.x *= -1;
             transform.localScale = scale;
         }
     }
-
-
 }
