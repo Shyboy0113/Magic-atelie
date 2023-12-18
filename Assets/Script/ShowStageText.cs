@@ -2,22 +2,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class ShowRoundText : MonoBehaviour
+public class ShowStageText : MonoBehaviour
 {
     public TMP_Text roundText;
     public TMP_Text timeRemaining;
 
-    float limitTime;
-
-    private void Start()
-    {
-        limitTime = 30.0f;        
-    }
     void Update()
     {
-        roundText.text = "Round : " + GameManager.Instance.gameStage.ToString();
+        roundText.text = "Stage : " + GameManager.Instance.gameStage.ToString();
 
-        if (limitTime <= 0f)
+        if (GameManager.Instance.limitTime <= 0f)
         {
             Debug.Log("타임아웃되었습니다.");
             timeRemaining.text = "남은 시간 : 0";
@@ -30,10 +24,10 @@ public class ShowRoundText : MonoBehaviour
         }
         else
         {
-            timeRemaining.text = "남은 시간 : " + limitTime.ToString("F2");
+            timeRemaining.text = "남은 시간 : " + GameManager.Instance.limitTime.ToString("F2");
         }
 
-        limitTime -= Time.deltaTime;
+        GameManager.Instance.limitTime -= Time.deltaTime;
 
     }
 

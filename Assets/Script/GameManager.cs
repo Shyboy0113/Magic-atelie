@@ -6,6 +6,25 @@ public class GameManager : Singleton<GameManager>
 {
     public int gameStage = 1;
 
+    public float limitTime;
+
+    private Fade fade;
+
+    private void Awake()
+    {
+        fade = GetComponent<Fade>();
+    }
+
+    public void FadeIn()
+    {
+        fade.FadeIn();
+    }
+
+    public void FadeOut()
+    {
+        fade.FadeOut();
+    }
+
     public void AddStage()
     {
         gameStage += 1;

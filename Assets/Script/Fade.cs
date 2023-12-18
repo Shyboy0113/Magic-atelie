@@ -12,20 +12,15 @@ public class Fade : MonoBehaviour
 {
     public Image image;
 
-    public float fadeTime = 1f;
+    public float fadeTime;
         
-    private void Start()
-    {
-        fadeIn();
-    }
-
-    public void fadeIn()
+    public void FadeIn()
     {
         StopAllCoroutines();
         StartCoroutine(CFadeIn());
     }
 
-    public void fadeOut()
+    public void FadeOut()
     {
         StopAllCoroutines();
         StartCoroutine(CFadeOut());
@@ -65,17 +60,5 @@ public class Fade : MonoBehaviour
         }
 
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Mercenary"))
-        {
-            fadeOut();
-
-        }
-
-    }
-
-
 
 }
