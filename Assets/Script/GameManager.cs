@@ -8,6 +8,11 @@ public class GameManager : Singleton<GameManager>
 
     public float limitTime;
 
+
+    public int gold = 0;
+    public int diamond = 0; 
+
+    //페이드 인/아웃 기능
     private Fade fade;
 
     private void Awake()
