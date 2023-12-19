@@ -4,31 +4,15 @@ using TMPro;
 
 public class ShowStageText : MonoBehaviour
 {
-    public TMP_Text roundText;
-    public TMP_Text timeRemaining;
+    public TMP_Text gold;
+    public TMP_Text mana;
+    public TMP_Text dia;
 
     void Update()
     {
-        roundText.text = "Stage : " + GameManager.Instance.gameStage.ToString();
-
-        if (GameManager.Instance.limitTime <= 0f)
-        {
-            Debug.Log("타임아웃되었습니다.");
-            timeRemaining.text = "남은 시간 : 0";
-
-            GameManager.Instance.SubStage();
-
-            string sceneName = SceneManager.GetActiveScene().name;
-            GameManager.Instance.ChangeScene(sceneName);
-
-        }
-        else
-        {
-            timeRemaining.text = "남은 시간 : " + GameManager.Instance.limitTime.ToString("F2");
-        }
-
-        GameManager.Instance.limitTime -= Time.deltaTime;
-
+        gold.text = "Gold : " + GameManager.Instance.gold.ToString();
+        mana.text = "Mana : " + GameManager.Instance.mana.ToString();
+        dia.text = "Dia : " + GameManager.Instance.diamond.ToString();
     }
 
 }

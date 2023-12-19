@@ -4,12 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public int gameStage = 1;
-
     public float limitTime;
-
+    public float gameStage;
 
     public int gold = 0;
+    public int mana = 0;
     public int diamond = 0; 
 
     //페이드 인/아웃 기능
