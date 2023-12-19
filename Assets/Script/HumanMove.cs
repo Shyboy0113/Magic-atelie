@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class CharacterMove : MonoBehaviour
+public class HumanMove : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed = 2f;
     public float deceleration = 10f;
 
     public float raycastDistance = 5f;
@@ -29,13 +29,13 @@ public class CharacterMove : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(EnemyDetectionRoutine());
+        StartCoroutine(DemonDetectionRoutine());
     }
-    private IEnumerator EnemyDetectionRoutine()
+    private IEnumerator DemonDetectionRoutine()
     {
         while (true)
         {
-            DetectEnemies();
+            DetectDemon();
             yield return new WaitForSeconds(0.05f);
         }
     }
@@ -63,7 +63,7 @@ public class CharacterMove : MonoBehaviour
         Flip(_rigidbody.velocity.x);
     }   
 
-    private void DetectEnemies()
+    private void DetectDemon()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, facingRight ? Vector2.right : Vector2.left, raycastDistance, enemyLayer);
 

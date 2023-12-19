@@ -2,20 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PortalStage : MonoBehaviour
+public class Portal : MonoBehaviour
 {
-    public string sceneName;
+    public bool isRight;
+    public Vector3 newPosition;
 
+    public string sceneName;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if(isRight is true)
         {
-            StartCoroutine(ChangeStageRoutine(false));
+            if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                collision.gameObject.transform.position = newPosition;
+            }
         }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Mercenary"))
+        else
         {
-            StartCoroutine(ChangeStageRoutine(true));
+            if(collision.gameObject.layer == LayerMask.NameToLayer("Mercenary"))
+            {
+
+            }
         }
+
     }
 
     private IEnumerator ChangeStageRoutine(bool next)

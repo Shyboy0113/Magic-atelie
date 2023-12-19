@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyMove : MonoBehaviour
+public class DemonMove : MonoBehaviour
 {
-    public float speed = -5f;
+    public float speed = -2f;
     public float deceleration = 10f;
 
     //캐릭터 인식용 RayCast
@@ -30,19 +30,19 @@ public class EnemyMove : MonoBehaviour
     }
         private void Start()
     {
-        StartCoroutine(MercenaryDetectionRoutine());
+        StartCoroutine(HumanDetectionRoutine());
     }
 
-    private IEnumerator MercenaryDetectionRoutine()
+    private IEnumerator HumanDetectionRoutine()
     {
         while (true)
         {
-            DetectMercenary();
+            DetectHuman();
             yield return new WaitForSeconds(0.05f);
         }
     }
 
-    private void DetectMercenary()
+    private void DetectHuman()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, facingRight ? Vector2.right : Vector2.left, raycastDistance, enemyLayer);
 
@@ -81,22 +81,22 @@ public class EnemyMove : MonoBehaviour
         Flip(_rigidbody.velocity.x);
     }
 
-    private void Attack(GameObject Mercenary)
+    private void Attack(GameObject enemy)
     {
         if (canAttack)
         {
             animator.SetTrigger("Attack");
 
-            CharacterInformation mercenaryHealth = Mercenary.GetComponent<CharacterInformation>();
-            if (mercenaryHealth != null)
+            CharacterInformation enemyHealth = enemy.GetComponent<CharacterInformation>();
+            if (enemyHealth != null)
             {
-                mercenaryHealth.TakeDamage(_characterInformation.currentAtk);
+                enemyHealth.TakeDamage(_characterInformation.currentAtk);
             }
 
             StartCoroutine(StartAttackCooldown());
         }
     }
-        private IEnumerator StartAttackCooldown()
+    private IEnumerator StartAttackCooldown()
     {
         canAttack = false;
         yield return new WaitForSeconds(attackCoolDown);
